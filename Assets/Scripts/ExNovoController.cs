@@ -10,6 +10,7 @@ namespace ExNovo
         [SerializeField] private TextAsset JSONActionTree = default;
 
         private ExNovoSoundPlayer ExNovoSoundPlayer;
+        private ExNovoBoxUI ExNovoBoxUI;
 
         private ExNovoActionTreeNode ActionTreeRoot;
         private ExNovoActionTreeNode CurrentTreeNode;
@@ -18,7 +19,7 @@ namespace ExNovo
 
         private void Start()
         {
-            // check for json action tree
+            // process json action tree
             if (JSONActionTree == null)
             {
                 throw new MissingReferenceException("ExNovo controller requires an action tree json file");
@@ -27,13 +28,22 @@ namespace ExNovo
             ActionTreeRoot.DEBUG_print_tree();
             CurrentTreeNode = ActionTreeRoot;
 
-            // check for command runner
+            // initialize boxUI
+            ExNovoBoxUI = GetComponentInChildren<ExNovoBoxUI>();
+            if (ExNovoBoxUI == null)
+            {
+                throw new MissingComponentException("Requies ExNovoBoxUI in a child object");
+            }
+            ExNovoBoxUI.OnChangeActionTreePosition(CurrentTreeNode);
+
+            // get reference to command runner
             CommandRunner = FindObjectOfType<CommandRunner>();
             if (CommandRunner == null)
             {
                 throw new MissingComponentException("No CommandRunner was found. Make sure there is one in the scene. ExNovo cannot run commands without it");
             }
 
+            // Get sound player
             ExNovoSoundPlayer = GetComponent<ExNovoSoundPlayer>();
             if (ExNovoSoundPlayer == null)
             {
@@ -70,6 +80,7 @@ namespace ExNovo
             if (CurrentTreeNode.HasChild(selectNumber))
             {
                 CurrentTreeNode = CurrentTreeNode.Child(selectNumber);
+                ExNovoBoxUI.OnChangeActionTreePosition(CurrentTreeNode);
                 ExNovoSoundPlayer.PlaySelectSound(selectNumber);
             }
             else
@@ -85,9 +96,16 @@ namespace ExNovo
             {
                 Debug.Log("Running command " + CurrentTreeNode.CommandText);
                 (string methodName, string[] arguments) = ParseCommandText(CurrentTreeNode.CommandText);
-                CommandRunner.RunActionForCommand(methodName, arguments);
-                CurrentTreeNode = ActionTreeRoot;
-                ExNovoSoundPlayer.PlayConfirmSound();
+                try
+                {
+                    CommandRunner.RunActionForCommand(methodName, arguments);
+                    ExNovoSoundPlayer.PlayConfirmSound();
+                }
+                finally
+                {
+                    CurrentTreeNode = ActionTreeRoot;
+                    ExNovoBoxUI.OnChangeActionTreePosition(CurrentTreeNode);
+                }
             }
             else
             {
@@ -101,6 +119,7 @@ namespace ExNovo
             if (CurrentTreeNode.IsRoot == false)
             {
                 CurrentTreeNode = ActionTreeRoot;
+                ExNovoBoxUI.OnChangeActionTreePosition(CurrentTreeNode);
                 ExNovoSoundPlayer.PlayCancelSound();
             }
             else
@@ -123,6 +142,7 @@ namespace ExNovo
             }
             else
             {
+                // return the method name and the arguments seperately
                 return (
                     splitCommand[0],
                     splitCommand

@@ -3,22 +3,22 @@
     "color": "#000000",
     "next1": {
         "name": "Cut",
-        "color": "#111111",
-        "command": "Cut)"
+        "color": "#FF0000",
+        "command": "Cut"
     },
     "next2": {
         "name": "Copy",
-        "color": "#222222",
+        "color": "#00FF00",
         "command": "Copy",
         "next1": {
             "name": "Hey",
-            "color": "#444444",
+            "color": "#66FF66",
             "command": "hey"
         }
     },
     "next3": {
         "name": "Paste",
-        "color": "#333333",
+        "color": "#0000FF",
         "command": "Paste"
     }
 }
