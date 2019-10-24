@@ -85,8 +85,6 @@ namespace ExNovo
             {
                 Debug.Log("Running command " + CurrentTreeNode.CommandText);
                 (string methodName, string[] arguments) = ParseCommandText(CurrentTreeNode.CommandText);
-                Debug.Log("Method: " + methodName);
-                Debug.Log("num args: " + arguments.Length);
                 CommandRunner.RunActionForCommand(methodName, arguments);
                 CurrentTreeNode = ActionTreeRoot;
                 ExNovoSoundPlayer.PlayConfirmSound();
