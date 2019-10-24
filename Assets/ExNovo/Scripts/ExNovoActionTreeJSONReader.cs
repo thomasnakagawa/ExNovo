@@ -61,7 +61,11 @@ namespace ExNovo
 
         private static ExNovoActionTreeNode BuildXNVNode(JSONNode jsonNode, ExNovoActionTreeNode parentXNVNode)
         {
-            ColorUtility.TryParseHtmlString(jsonNode["color"], out Color nodeColor);
+            Color nodeColor = parentXNVNode != null ? parentXNVNode.Color : Color.white; // set default color to the parent color in case this node doesnt have it's own color defined
+            if (jsonNode["color"] != null)
+            {
+                ColorUtility.TryParseHtmlString(jsonNode["color"], out nodeColor);
+            }
             return new ExNovoActionTreeNode(jsonNode["name"], nodeColor, jsonNode["command"], parentXNVNode);
         }
     }

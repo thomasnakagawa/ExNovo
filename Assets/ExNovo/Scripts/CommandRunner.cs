@@ -1,5 +1,4 @@
 ﻿using System.Reflection;
-using System.Text;
 using UnityEngine;
 
 namespace ExNovo
@@ -18,21 +17,6 @@ namespace ExNovo
                 throw new System.ArgumentException("Command runner has no method with the name \"" + command + "\". Make sure you create a method with this name in your class that derives from CommandRunner");
             }
             methodInfo.Invoke(this, arguments);
-        }
-
-        public void DebugMessage()
-        {
-            Debug.Log("CommandRunner debug command was run");
-        }
-
-        public void DebugMessageWithArg(string arg)
-        {
-            Debug.Log("CommandRunner debug command was run with argument " + arg);
-        }
-
-        public void DebugMessageWithArgs(string arg1, string arg2)
-        {
-            Debug.Log("CommandRunner debug command was run with arguments " + arg1 + ", " + arg2);
         }
     }
 }

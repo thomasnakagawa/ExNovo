@@ -4,7 +4,11 @@
     "next1": {
         "name": "Cut",
         "color": "#FF0000",
-        "command": "Cut"
+        "command": "Cut",
+        "next1": {
+            "name": "Insert",
+            "command": "Insert"
+        }
     },
     "next2": {
         "name": "Copy",

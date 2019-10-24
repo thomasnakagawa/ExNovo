@@ -1,10 +1,8 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace ExNovo
 {
-    public class ExNovoBoxUI : ExNovoUI
+    public class ExNovoBoxUI : MonoBehaviour
     {
         [SerializeField] private ActionBox SelectedActionBox = default;
         [SerializeField] private ActionBox Next1 = default;
