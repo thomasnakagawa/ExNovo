@@ -2,14 +2,14 @@
     "name": "Root",
     "color": "#000000",
     "next1": {
-        "name": "Cut",
+        "name": "Argument test",
         "color": "#111111",
-        "command": "cut"
+        "command": "DebugMessageWithArgs(hey, what)"
     },
     "next2": {
         "name": "Copy",
         "color": "#222222",
-        "command": "copy",
+        "command": "Copy",
         "next1": {
             "name": "Hey",
             "color": "#444444",
@@ -19,6 +19,6 @@
     "next3": {
         "name": "Paste",
         "color": "#333333",
-        "command": "paste"
+        "command": "Paste"
     }
 }

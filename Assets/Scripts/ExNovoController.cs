@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace ExNovo
@@ -13,8 +14,11 @@ namespace ExNovo
         private ExNovoActionTreeNode ActionTreeRoot;
         private ExNovoActionTreeNode CurrentTreeNode;
 
+        private CommandRunner CommandRunner;
+
         private void Start()
         {
+            // check for json action tree
             if (JSONActionTree == null)
             {
                 throw new MissingReferenceException("ExNovo controller requires an action tree json file");
@@ -22,6 +26,13 @@ namespace ExNovo
             ActionTreeRoot = ExNovoActionTreeJSONReader.ReadTreeFromJSON(JSONActionTree.text);
             ActionTreeRoot.DEBUG_print_tree();
             CurrentTreeNode = ActionTreeRoot;
+
+            // check for command runner
+            CommandRunner = FindObjectOfType<CommandRunner>();
+            if (CommandRunner == null)
+            {
+                throw new MissingComponentException("No CommandRunner was found. Make sure there is one in the scene. ExNovo cannot run commands without it");
+            }
 
             ExNovoSoundPlayer = GetComponent<ExNovoSoundPlayer>();
             if (ExNovoSoundPlayer == null)
@@ -73,6 +84,10 @@ namespace ExNovo
             if (CurrentTreeNode.HasCommandToRun)
             {
                 Debug.Log("Running command " + CurrentTreeNode.CommandText);
+                (string methodName, string[] arguments) = ParseCommandText(CurrentTreeNode.CommandText);
+                Debug.Log("Method: " + methodName);
+                Debug.Log("num args: " + arguments.Length);
+                CommandRunner.RunActionForCommand(methodName, arguments);
                 CurrentTreeNode = ActionTreeRoot;
                 ExNovoSoundPlayer.PlayConfirmSound();
             }
@@ -94,6 +109,29 @@ namespace ExNovo
             {
                 Debug.Log("Cannot cancel here");
                 ExNovoSoundPlayer.PlayErrorSound();
+            }
+        }
+
+        public (string methodName, string[] arguments) ParseCommandText(string commandText)
+        {
+            string[] splitCommand = commandText.Split(new char[] { '(', ')', ',' }, System.StringSplitOptions.RemoveEmptyEntries);
+            if (splitCommand.Length == 0)
+            {
+                return (null, null);
+            }
+            else if (splitCommand.Length == 1)
+            {
+                return (splitCommand[0], null);
+            }
+            else
+            {
+                return (
+                    splitCommand[0],
+                    splitCommand
+                        .Skip(1)
+                        .Select(arg => arg.Trim())
+                        .ToArray()
+                );
             }
         }
     }
