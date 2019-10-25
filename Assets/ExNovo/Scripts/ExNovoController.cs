@@ -90,25 +90,20 @@ namespace ExNovo
 
         public void OnInputConfirm()
         {
-            if (CurrentTreeNode.HasCommandToRun)
+            try
             {
-                Debug.Log("Running command " + CurrentTreeNode.CommandText);
-                (string methodName, string[] arguments) = ParseCommandText(CurrentTreeNode.CommandText);
-                try
-                {
-                    CommandRunner.RunActionForCommand(methodName, arguments);
-                    ExNovoSoundPlayer.PlayConfirmSound();
-                }
-                finally
-                {
-                    CurrentTreeNode = ActionTreeRoot;
-                    ExNovoBoxUI.OnChangeActionTreePosition(CurrentTreeNode);
-                }
+                CommandRunner.RunMethodCallText(CurrentTreeNode.MethodCallText);
+                ExNovoSoundPlayer.PlayConfirmSound();
             }
-            else
+            catch (System.Exception e)
             {
-                Debug.Log("Cannot run command here");
                 ExNovoSoundPlayer.PlayErrorSound();
+                throw e;
+            }
+            finally
+            {
+                CurrentTreeNode = ActionTreeRoot;
+                ExNovoBoxUI.OnChangeActionTreePosition(CurrentTreeNode);
             }
         }
 
@@ -124,30 +119,6 @@ namespace ExNovo
             {
                 Debug.Log("Cannot cancel here");
                 ExNovoSoundPlayer.PlayErrorSound();
-            }
-        }
-
-        public (string methodName, string[] arguments) ParseCommandText(string commandText)
-        {
-            string[] splitCommand = commandText.Split(new char[] { '(', ')', ',' }, System.StringSplitOptions.RemoveEmptyEntries);
-            if (splitCommand.Length == 0)
-            {
-                return (null, null);
-            }
-            else if (splitCommand.Length == 1)
-            {
-                return (splitCommand[0], null);
-            }
-            else
-            {
-                // return the method name and the arguments seperately
-                return (
-                    splitCommand[0],
-                    splitCommand
-                        .Skip(1)
-                        .Select(arg => arg.Trim())
-                        .ToArray()
-                );
             }
         }
     }

@@ -66,7 +66,7 @@ namespace ExNovo
             {
                 ColorUtility.TryParseHtmlString(jsonNode["color"], out nodeColor);
             }
-            return new ExNovoActionTreeNode(jsonNode["name"], nodeColor, jsonNode["command"], parentXNVNode);
+            return new ExNovoActionTreeNode(jsonNode["name"], nodeColor, jsonNode["methodCall"], parentXNVNode);
         }
     }
 }

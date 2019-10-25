@@ -33,5 +33,10 @@ namespace ExNovo.Example
         {
             MessageText.text = "Command \"" + commandMessage + "\" was run";
         }
+
+        public void Ok(string arg)
+        {
+            MessageText.text = "Alright: " + arg;
+        }
     }
 }

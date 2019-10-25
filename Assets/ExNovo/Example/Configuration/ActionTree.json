@@ -4,7 +4,7 @@
     "next1": {
         "name": "Cut",
         "color": "#FF0000",
-        "command": "Cut",
+        "methodCall": "Cut()",
         "next1": {
             "name": "Insert",
             "command": "Insert"
@@ -13,16 +13,28 @@
     "next2": {
         "name": "Copy",
         "color": "#00FF00",
-        "command": "Copy",
+        "methodCall": "Copy()",
         "next1": {
             "name": "Hey",
             "color": "#66FF66",
-            "command": "hey"
+            "methodCall": "hey"
         }
     },
     "next3": {
         "name": "Paste",
         "color": "#0000FF",
-        "command": "Paste"
+        "methodCall": "Paste()",
+        "next1": {
+            "name": "Ok1",
+            "methodCall": "Ok(one)"
+        },
+        "next2": {
+            "name": "Ok2",
+            "methodCall": "Ok(two)"
+        },
+        "next3": {
+            "name": "Ok3",
+            "methodCall": "Ok(three)"
+        }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using System.Linq;
+using System.Reflection;
 using UnityEngine;
 
 namespace ExNovo
@@ -9,14 +10,49 @@ namespace ExNovo
     /// </summary>
     public abstract class CommandRunner : MonoBehaviour
     {
-        public void RunActionForCommand(string command, string[] arguments)
+        public void RunMethodCallText(string methodCallText)
         {
-            MethodInfo methodInfo = GetType().GetMethod(command);
+            if (methodCallText == null)
+            {
+                throw new System.ArgumentNullException(nameof(methodCallText), "Method call text cannot be null");
+            }
+
+            (string methodName, string[] arguments) = ParseCommandText(methodCallText);
+            if (methodName == null)
+            {
+                throw new System.ArgumentException("Cannot run action because method call text has no method name");
+            }
+
+            MethodInfo methodInfo = GetType().GetMethod(methodName);
             if (methodInfo == null)
             {
-                throw new System.ArgumentException("Command runner has no method with the name \"" + command + "\". Make sure you create a method with this name in your class that derives from CommandRunner");
+                throw new System.ArgumentException("Command runner has no method with the name \"" + methodName + "\". Make sure there is a public method with this name in the class " + this.GetType().Name);
             }
             methodInfo.Invoke(this, arguments);
+        }
+
+        private (string methodName, string[] arguments) ParseCommandText(string commandText)
+        {
+            string[] splitCommand = commandText.Split(new char[] { '(', ')', ',' }, System.StringSplitOptions.RemoveEmptyEntries);
+            if (splitCommand.Length == 0)
+            {
+                return (null, null);
+            }
+            else if (splitCommand.Length == 1)
+            {
+                return (splitCommand[0], null);
+            }
+            else
+            {
+                // return the method name and the arguments seperately
+                return (
+                    splitCommand[0],
+                    splitCommand
+                        .Skip(1)
+                        .Select(arg => arg.Trim())
+                        .ToArray()
+                );
+            }
         }
     }
 }

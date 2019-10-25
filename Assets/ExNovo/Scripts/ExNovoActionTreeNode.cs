@@ -8,20 +8,20 @@ namespace ExNovo
     {
         public string ActionName { get; private set; }
         public Color Color { get; private set; }
-        public string CommandText { get; private set; }
+        public string MethodCallText { get; private set; }
         private List<ExNovoActionTreeNode> Children;
         public ExNovoActionTreeNode Parent { get; set; }
 
         public bool IsRoot => Parent == null;
         public bool IsLeaf => Children == null || Children.Count < 1;
 
-        public bool HasCommandToRun => CommandText != null;
+        public bool HasMethodToCall => MethodCallText != null;
 
-        public ExNovoActionTreeNode(string name, Color color, string command, ExNovoActionTreeNode parent)
+        public ExNovoActionTreeNode(string name, Color color, string methodCallText, ExNovoActionTreeNode parent)
         {
             this.ActionName = name;
             this.Color = color;
-            this.CommandText = command;
+            this.MethodCallText = methodCallText;
             this.Parent = parent;
             Children = new List<ExNovoActionTreeNode>();
 
