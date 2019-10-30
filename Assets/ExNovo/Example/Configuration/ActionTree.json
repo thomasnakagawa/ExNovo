@@ -7,7 +7,32 @@
         "methodCall": "Cut()",
         "next1": {
             "name": "Insert",
-            "command": "Insert"
+            "methodCall": "Insert()"
+        },
+        "next2": {
+            "name": "Reset arm",
+            "methodCall": "ResetArm()",
+            "color": "#FF3333"
+        },
+        "next3": {
+            "name": "Blue sky",
+            "methodCall": "ChangeSkyColor(#5555FF)",
+            "color": "#5555FF",
+            "next1": {
+                "name": "Morning",
+                "methodCall": "ChangeSkyColor(#AAAAFF)",
+                "color": "#AAAAFF"
+            },
+            "next2": {
+                "name": "Evening",
+                "methodCall": "ChangeSkyColor(#FFCC99)",
+                "color": "#FFCC99"
+            },
+            "next3": {
+                "name": "Night",
+                "methodCall": "ChangeSkyColor(#331111)",
+                "color": "#331111"
+            }
         }
     },
     "next2": {
@@ -17,7 +42,7 @@
         "next1": {
             "name": "Hey",
             "color": "#66FF66",
-            "methodCall": "hey"
+            "methodCall": "Hey()"
         }
     },
     "next3": {

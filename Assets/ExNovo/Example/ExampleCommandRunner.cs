@@ -29,14 +29,36 @@ namespace ExNovo.Example
             ShowCommandMessageInUI("Paste");
         }
 
-        private void ShowCommandMessageInUI(string commandMessage)
-        {
-            MessageText.text = "Command \"" + commandMessage + "\" was run";
-        }
-
         public void Ok(string arg)
         {
             MessageText.text = "Alright: " + arg;
+        }
+
+        public void Hey()
+        {
+            ShowCommandMessageInUI("Hey");
+        }
+
+        public void Insert()
+        {
+            ShowCommandMessageInUI("Insert");
+        }
+
+        public void ResetArm()
+        {
+            GameObject.Find("Arm").transform.eulerAngles = Vector3.zero;
+            ShowCommandMessageInUI("Arm rotation reset");
+        }
+
+        public void ChangeSkyColor(string color)
+        {
+            ColorUtility.TryParseHtmlString(color, out Color col);
+            Camera.main.backgroundColor = col;
+        }
+
+        private void ShowCommandMessageInUI(string commandMessage)
+        {
+            MessageText.text = "Command \"" + commandMessage + "\" was run";
         }
     }
 }

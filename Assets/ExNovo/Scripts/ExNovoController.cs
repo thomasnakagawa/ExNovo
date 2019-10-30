@@ -6,9 +6,9 @@ namespace ExNovo
     public class ExNovoController : MonoBehaviour
     {
         [SerializeField] private TextAsset JSONActionTree = default;
+        [SerializeField] private ExNovoBoxUI ExNovoBoxUI = default;
 
         private ExNovoSoundPlayer ExNovoSoundPlayer;
-        private ExNovoBoxUI ExNovoBoxUI;
 
         private ExNovoActionTreeNode ActionTreeRoot;
         private ExNovoActionTreeNode CurrentTreeNode;
@@ -23,14 +23,13 @@ namespace ExNovo
                 throw new MissingReferenceException("ExNovo controller requires an action tree json file");
             }
             ActionTreeRoot = ExNovoActionTreeJSONReader.ReadTreeFromJSON(JSONActionTree.text);
-            ActionTreeRoot.DEBUG_print_tree();
+            // ActionTreeRoot.DEBUG_print_tree();
             CurrentTreeNode = ActionTreeRoot;
 
             // initialize boxUI
-            ExNovoBoxUI = GetComponentInChildren<ExNovoBoxUI>();
             if (ExNovoBoxUI == null)
             {
-                throw new MissingComponentException("Requies ExNovoBoxUI in a child object");
+                throw new MissingReferenceException("Requies ExNovoBoxUI");
             }
             ExNovoBoxUI.OnChangeActionTreePosition(CurrentTreeNode);
 
@@ -51,15 +50,15 @@ namespace ExNovo
 
         private void Update()
         {
-            if (Input.GetKeyDown(KeyCode.J))
+            if (Input.GetKeyDown(KeyCode.J) || Input.GetKeyDown(KeyCode.A))
             {
                 OnInputSelect(1);
             }
-            if (Input.GetKeyDown(KeyCode.K))
+            if (Input.GetKeyDown(KeyCode.K) || Input.GetKeyDown(KeyCode.S))
             {
                 OnInputSelect(2);
             }
-            if (Input.GetKeyDown(KeyCode.L))
+            if (Input.GetKeyDown(KeyCode.L) || Input.GetKeyDown(KeyCode.D))
             {
                 OnInputSelect(3);
             }
@@ -67,7 +66,7 @@ namespace ExNovo
             {
                 OnInputConfirm();
             }
-            if (Input.GetKeyDown(KeyCode.RightShift))
+            if (Input.GetKeyDown(KeyCode.RightShift) || Input.GetKeyDown(KeyCode.LeftShift))
             {
                 OnInputCancel();
             }
@@ -92,6 +91,10 @@ namespace ExNovo
         {
             try
             {
+                if (CurrentTreeNode.IsRoot)
+                {
+                    throw new System.InvalidOperationException("Cannot confirm at root");
+                }
                 CommandRunner.RunMethodCallText(CurrentTreeNode.MethodCallText);
                 ExNovoSoundPlayer.PlayConfirmSound();
             }

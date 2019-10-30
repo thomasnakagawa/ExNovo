@@ -45,7 +45,7 @@ namespace ExNovo
             }
             if (!HasChild(number))
             {
-                throw new System.ArgumentOutOfRangeException(nameof(number), number, "Child does not exist");
+                return null;
             }
             return Children[number - 1];
         }
