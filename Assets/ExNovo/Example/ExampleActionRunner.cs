@@ -2,7 +2,7 @@
 
 namespace ExNovo.Example
 {
-    public class ExampleCommandRunner : CommandRunner
+    public class ExampleActionRunner : ExNovoActionRunner
     {
         [SerializeField] private TMPro.TMP_Text MessageText = default;
 

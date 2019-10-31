@@ -1,19 +1,22 @@
-﻿using System.Linq;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace ExNovo
 {
+    /// <summary>
+    /// The main ExNovo class. Reads the action tree from json file, listens for inputs, calls to UI to update and runs actions
+    /// </summary>
+    [RequireComponent(typeof(ExNovoSoundPlayer))]
     public class ExNovoController : MonoBehaviour
     {
         [SerializeField] private TextAsset JSONActionTree = default;
-        [SerializeField] private ExNovoBoxUI ExNovoBoxUI = default;
+        [SerializeField] private ExNovoBoxUI ExNovoBoxUIRoot = default;
 
         private ExNovoSoundPlayer ExNovoSoundPlayer;
 
         private ExNovoActionTreeNode ActionTreeRoot;
         private ExNovoActionTreeNode CurrentTreeNode;
 
-        private CommandRunner CommandRunner;
+        private ExNovoActionRunner ActionRunner;
 
         private void Start()
         {
@@ -23,21 +26,20 @@ namespace ExNovo
                 throw new MissingReferenceException("ExNovo controller requires an action tree json file");
             }
             ActionTreeRoot = ExNovoActionTreeJSONReader.ReadTreeFromJSON(JSONActionTree.text);
-            // ActionTreeRoot.DEBUG_print_tree();
             CurrentTreeNode = ActionTreeRoot;
 
             // initialize boxUI
-            if (ExNovoBoxUI == null)
+            if (ExNovoBoxUIRoot == null)
             {
-                throw new MissingReferenceException("Requies ExNovoBoxUI");
+                throw new MissingReferenceException("Requies reference to root of ExNovoBoxUI");
             }
-            ExNovoBoxUI.OnChangeActionTreePosition(CurrentTreeNode);
+            ExNovoBoxUIRoot.OnChangeActionTreePosition(CurrentTreeNode);
 
             // get reference to command runner
-            CommandRunner = FindObjectOfType<CommandRunner>();
-            if (CommandRunner == null)
+            ActionRunner = FindObjectOfType<ExNovoActionRunner>();
+            if (ActionRunner == null)
             {
-                throw new MissingComponentException("No CommandRunner was found. Make sure there is one in the scene. ExNovo cannot run commands without it");
+                throw new MissingComponentException("No ActionRunner was found. Make sure there is one in the scene. ExNovo cannot run commands without it");
             }
 
             // Get sound player
@@ -77,7 +79,7 @@ namespace ExNovo
             if (CurrentTreeNode.HasChild(selectNumber))
             {
                 CurrentTreeNode = CurrentTreeNode.Child(selectNumber);
-                ExNovoBoxUI.OnChangeActionTreePosition(CurrentTreeNode);
+                ExNovoBoxUIRoot.OnChangeActionTreePosition(CurrentTreeNode);
                 ExNovoSoundPlayer.PlaySelectSound(selectNumber);
             }
             else
@@ -95,7 +97,7 @@ namespace ExNovo
                 {
                     throw new System.InvalidOperationException("Cannot confirm at root");
                 }
-                CommandRunner.RunMethodCallText(CurrentTreeNode.MethodCallText);
+                ActionRunner.RunMethodCallText(CurrentTreeNode.MethodCallText);
                 ExNovoSoundPlayer.PlayConfirmSound();
             }
             catch (System.Exception e)
@@ -106,7 +108,7 @@ namespace ExNovo
             finally
             {
                 CurrentTreeNode = ActionTreeRoot;
-                ExNovoBoxUI.OnChangeActionTreePosition(CurrentTreeNode);
+                ExNovoBoxUIRoot.OnChangeActionTreePosition(CurrentTreeNode);
             }
         }
 
@@ -115,7 +117,7 @@ namespace ExNovo
             if (CurrentTreeNode.IsRoot == false)
             {
                 CurrentTreeNode = ActionTreeRoot;
-                ExNovoBoxUI.OnChangeActionTreePosition(CurrentTreeNode);
+                ExNovoBoxUIRoot.OnChangeActionTreePosition(CurrentTreeNode);
                 ExNovoSoundPlayer.PlayCancelSound();
             }
             else

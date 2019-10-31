@@ -4,6 +4,9 @@ using System.Text;
 
 namespace ExNovo
 {
+    /// <summary>
+    /// Represents one node in the tree of actions. Contains data needed for visually representing the action, and data needed to run the action
+    /// </summary>
     public class ExNovoActionTreeNode
     {
         public string ActionName { get; private set; }
@@ -37,6 +40,11 @@ namespace ExNovo
         }
 
 
+        /// <summary>
+        /// Returns a child node if it exists, or null. Child is identified with integer 1, 2 or 3
+        /// </summary>
+        /// <param name="number">The branch number of the child. Valid values: 1, 2, 3</param>
+        /// <returns>The child node, or null</returns>
         public ExNovoActionTreeNode Child(int number)
         {
             if (number < 1 || number > 3)
@@ -55,6 +63,9 @@ namespace ExNovo
             return Children.Count >= childNumber;
         }
 
+        /// <summary>
+        /// Recusively prints the tree to the console
+        /// </summary>
         public void DEBUG_print_tree()
         {
             Debug.Log(this.ToString());

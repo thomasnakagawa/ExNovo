@@ -3,6 +3,9 @@ using UnityEngine.UI;
 
 namespace ExNovo
 {
+    /// <summary>
+    /// Controls and show the boxes that make up the visuals of ExNovo.
+    /// </summary>
     public class ExNovoBoxUI : MonoBehaviour
     {
         [SerializeField] private ExNovoBoxUI Next1 = default;
@@ -27,16 +30,20 @@ namespace ExNovo
             }
         }
 
+        /// <summary>
+        /// Updates the visuals of this BoxUI node and any higher up BoxUI nodes based on what the currently selected actionTreeNode is
+        /// </summary>
+        /// <param name="actionTreeNode"></param>
         public void OnChangeActionTreePosition(ExNovoActionTreeNode actionTreeNode)
         {
             if (actionTreeNode == null)
             {
-                Hide(true/*recursive*/);
+                Hide(true/*hide recursively*/);
                 return;
             }
             if (actionTreeNode.IsRoot)
             {
-                Hide(false/*not recursive*/);
+                Hide(false/*not recursive, show the rest of the tree*/);
             }
             else
             {
@@ -64,6 +71,10 @@ namespace ExNovo
             Image.color = color;
         }
 
+        /// <summary>
+        /// Hides this BoxUI. If recursive=true, then also hide any higher up BoxUI nodes
+        /// </summary>
+        /// <param name="recursive">When true, also hides higher up BoxUI nodes</param>
         public void Hide(bool recursive)
         {
             gameObject.SetActive(false);

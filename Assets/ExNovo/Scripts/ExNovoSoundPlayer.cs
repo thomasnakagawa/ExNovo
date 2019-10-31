@@ -3,7 +3,7 @@
 namespace ExNovo
 {
     /// <summary>
-    /// Plays the UI sound effects in ExNovo UI. ExNovoInputHandler calls the public methods of this class to play sounds.
+    /// Plays the UI sound effects in ExNovo UI
     /// </summary>
     [RequireComponent(typeof(AudioSource))]
     public class ExNovoSoundPlayer : MonoBehaviour

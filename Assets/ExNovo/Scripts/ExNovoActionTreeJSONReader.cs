@@ -4,6 +4,9 @@ using SimpleJSON;
 
 namespace ExNovo
 {
+    /// <summary>
+    /// Class that provides static methods for reading the ActionTree json file and parsing it into an action tree that ExNovo can use
+    /// </summary>
     public static class ExNovoActionTreeJSONReader
     {
         [System.Serializable]
