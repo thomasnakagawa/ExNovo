@@ -15,7 +15,7 @@ namespace ExNovo
         private Image Image;
         private TMPro.TMP_Text Text;
 
-        private void Start()
+        private void Awake()
         {
             Image = GetComponent<Image>();
             if (Image == null)
