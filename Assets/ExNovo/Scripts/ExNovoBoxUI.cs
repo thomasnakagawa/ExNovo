@@ -8,9 +8,18 @@ namespace ExNovo
     /// </summary>
     public class ExNovoBoxUI : MonoBehaviour
     {
+        [Header("Next branch BoxUIs")]
         [SerializeField] private ExNovoBoxUI Next1 = default;
         [SerializeField] private ExNovoBoxUI Next2 = default;
         [SerializeField] private ExNovoBoxUI Next3 = default;
+
+        [Header("Visuals")]
+        [SerializeField] private Sprite HoverSprite = default;
+        [SerializeField] private Color HoverTint = Color.white;
+        [SerializeField] private float HoverTintLerp = 0.5f;
+
+        private Sprite UnHoverSprite;
+        private Color MainBoxColor;
 
         private Image Image;
         private TMPro.TMP_Text Text;
@@ -22,6 +31,7 @@ namespace ExNovo
             {
                 throw new MissingComponentException("Requires Image");
             }
+            UnHoverSprite = Image.sprite;
 
             Text = GetComponentInChildren<TMPro.TMP_Text>();
             if (Text == null)
@@ -68,7 +78,8 @@ namespace ExNovo
         {
             gameObject.SetActive(true);
             Text.text = text;
-            Image.color = color;
+            MainBoxColor = color;
+            Image.color = MainBoxColor;
         }
 
         /// <summary>
@@ -95,5 +106,61 @@ namespace ExNovo
             }
         }
 
+        public void SetHover(bool hover)
+        {
+            if (hover && HoverSprite != null)
+            {
+                Image.color = Color.Lerp(MainBoxColor, HoverTint, HoverTintLerp);
+                Image.sprite = HoverSprite;
+            }
+            else
+            {
+                Image.color = MainBoxColor;
+                Image.sprite = UnHoverSprite;
+            }
+        }
+
+        /// <summary>
+        /// Sets a child box to be hovered, and unhovers other child boxes
+        /// </summary>
+        /// <param name="childNumber">Which child box to hover (1, 2 or 3)</param>
+        public void SetHoverChild(int childNumber)
+        {
+            if (childNumber < 1 || childNumber > 3)
+            {
+                throw new System.ArgumentOutOfRangeException(nameof(childNumber), "Child number must be 1, 2 or 3");
+            }
+            if (Next1 != null)
+            {
+                Next1.SetHover(childNumber == 1);
+            }
+            if (Next2 != null)
+            {
+                Next2.SetHover(childNumber == 2);
+            }
+            if (Next3 != null)
+            {
+                Next3.SetHover(childNumber == 3);
+            }
+        }
+
+        /// <summary>
+        /// Sets all child boxes to be not hovered
+        /// </summary>
+        public void  UnHoverChildren()
+        {
+            if (Next1 != null)
+            {
+                Next1.SetHover(false);
+            }
+            if (Next2 != null)
+            {
+                Next2.SetHover(false);
+            }
+            if (Next3 != null)
+            {
+                Next3.SetHover(false);
+            }
+        }
     }
 }

@@ -72,6 +72,23 @@ namespace ExNovo
             {
                 OnInputCancel();
             }
+
+            if (Input.GetKeyDown(KeyCode.Q))
+            {
+                OnInputHover(1);
+            }
+            if (Input.GetKeyDown(KeyCode.W))
+            {
+                OnInputHover(2);
+            }
+            if (Input.GetKeyDown(KeyCode.E))
+            {
+                OnInputHover(3);
+            }
+            if (Input.GetKeyDown(KeyCode.R))
+            {
+                OnInputUnHover();
+            }
         }
 
         public void OnInputSelect(int selectNumber)
@@ -125,6 +142,16 @@ namespace ExNovo
                 Debug.Log("Cannot cancel here");
                 ExNovoSoundPlayer.PlayErrorSound();
             }
+        }
+
+        public void OnInputHover(int selectNumber)
+        {
+            ExNovoBoxUIRoot.SetHoverChild(selectNumber);
+        }
+
+        public void OnInputUnHover()
+        {
+            ExNovoBoxUIRoot.UnHoverChildren();
         }
     }
 }

@@ -90,6 +90,9 @@ MonoBehaviour:
   Next1: {fileID: 0}
   Next2: {fileID: 0}
   Next3: {fileID: 0}
+  HoverSprite: {fileID: 21300000, guid: 0f793f434a2744668987a756817cc593, type: 3}
+  HoverTint: {r: 1, g: 1, b: 1, a: 0.1}
+  HoverTintLerp: 0.3
 --- !u!1 &4888921850034106378
 GameObject:
   m_ObjectHideFlags: 0
